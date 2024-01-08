@@ -11,7 +11,7 @@ env:
   #MONGO_USERNAME: ${{ vars.MONGO_USERNAME }} 
   #MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
   MONGO_USERNAME: superuser
-  MONGO_PASSWORD: SuperPAssword
+  MONGO_PASSWORD: SuperPassword
 
 jobs:
     unit-testing:
