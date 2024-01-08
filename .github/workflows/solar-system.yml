@@ -40,7 +40,8 @@ jobs:
           run: npm test
 
         - name: Archive Test Result
-          if: steps.nodejs-unit-test-step.outcome == 'failure' || steps.nodejs-unit-test-step.outcome == 'success'
+          if: always()
+          #if: steps.nodejs-unit-test-step.outcome == 'failure' || steps.nodejs-unit-test-step.outcome == 'success'
           uses: actions/upload-artifact@v4
           with:
             name: Mocha-Test-Result-${{ matrix.operating_system }}-Node-${{ matrix.nodejs_version }}
