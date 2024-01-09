@@ -1,0 +1,16 @@
+name: Solar System Workflow
+
+on: 
+    workflow_dispatch:
+    push: 
+        branches: 
+          - main
+          - 'feature/*'
+          
+jobs:
+  print_test:
+    name: print test
+    runs-on: ubuntu-latest
+    steps:
+      - name: print
+        run: echo teste
