@@ -193,9 +193,7 @@ jobs:
         - name: Get Ingress Address
           run: |
             #echo "INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
-            echo "INGRESS_IP=127.0.0.1" >> $GITHUB_ENV
-            echo $INGRESS_IP
-            echo $GITHUB_ENV
+            echo "INGRESS_IP=127.0.0.1" >> $GITHUB_ENV      
 
         - name: Update Kubernetes Deployment
           uses: cschleiden/replace-tokens@v1
@@ -231,9 +229,13 @@ jobs:
         - name: Set App Ingress Host URL
           id: set-ingress-host-address
           run: |            
-            echo "APP_INGRESS_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "APP_INGRESS_HOST=solar.fsainovich.xyz" >> $GITHUB_ENV
           #echo "APP_INGRESS_HOST=$(k get -n ${{ vars.NAMESPACE }} ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}" | grep -v %)" >> "$GITHUB_ENV"  
   
+        - name: Test env          
+          run: |            
+            env
+
     integration-test:
       name: Dev Integration test
       runs-on: ubuntu-latest
