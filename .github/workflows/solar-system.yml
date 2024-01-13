@@ -229,7 +229,7 @@ jobs:
         - name: Set App Ingress Host URL
           id: set-ingress-host-address
           run: |            
-            echo "APP_INGRESS_HOST=solar.fsainovich.xyz" >> $GITHUB_ENV
+            echo "APP_INGRESS_HOST='solar.fsainovich.xyz'" >> $GITHUB_ENV
             
           #echo "APP_INGRESS_HOST=$(k get -n ${{ vars.NAMESPACE }} ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}" | grep -v %)" >> "$GITHUB_ENV"
   
