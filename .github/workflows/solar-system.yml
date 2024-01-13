@@ -168,8 +168,7 @@ jobs:
       runs-on: ubuntu-latest
       needs: docker     
       outputs:
-        INGRESS_HOST_OUTPUT: solar.fsainovich.xyz
-        #${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
+        INGRESS_HOST_OUTPUT: ${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
@@ -195,6 +194,8 @@ jobs:
           run: |
             #echo "INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
             echo "INGRESS_IP=127.0.0.1" >> $GITHUB_ENV
+            echo $INGRESS_IP
+            echo $GITHUB_ENV
 
         - name: Update Kubernetes Deployment
           uses: cschleiden/replace-tokens@v1
@@ -225,15 +226,13 @@ jobs:
 
         - name: Deploy to DEV ENV
           run: |
-            echo kubectl apply -f kubernetes/development/
-
+            echo kubectl apply -f kubernetes/development/    
+          
         - name: Set App Ingress Host URL
           id: set-ingress-host-address
           run: |            
-            echo "APP_INGRESS_HOST=solar.fsainovich.xyz" >> $GITHUB_ENV
-            echo $APP_INGRESS_HOST
-            
-          #echo "APP_INGRESS_HOST=$(k get -n ${{ vars.NAMESPACE }} ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}" | grep -v %)" >> "$GITHUB_ENV"
+            echo "APP_INGRESS_HOST=127.0.0.1" >> $GITHUB_ENV
+          #echo "APP_INGRESS_HOST=$(k get -n ${{ vars.NAMESPACE }} ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}" | grep -v %)" >> "$GITHUB_ENV"  
   
     integration-test:
       name: Dev Integration test
