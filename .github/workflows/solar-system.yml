@@ -167,7 +167,7 @@ jobs:
       name: Deploy Image Container to ENV      
       needs: docker     
       if: contains(github.ref, 'feature/')
-      uses: .github/workflows/reuse-deployment.yaml
+      uses: ./.github/workflows/reuse-deployment.yaml
       
 
     dev-integration-test:      
@@ -188,7 +188,7 @@ jobs:
       name: Deploy Image Container in Prod ENV
       if: github.ref == 'refs/heads/main'
       needs: docker
-      uses: .github/workflows/reuse-deployment.yaml      
+      uses: ./.github/workflows/reuse-deployment.yaml
 
     prod-integration-test:      
       name: Prod Integration test
