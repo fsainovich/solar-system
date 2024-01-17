@@ -212,7 +212,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       needs: prod-deploy
       env:
-        URL: ${{ needs.prod-deploy.outputs.INGRESS_HOST_OUTPUT }}
+        URL: ${{ needs.prod-deploy.outputs.application-url }}
       steps:
         - name: Test URL Outuput using CURL and JQ
           run: |            
