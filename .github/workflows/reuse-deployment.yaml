@@ -2,6 +2,25 @@ name: Deployment - Reusable Workflow
 
 on:
     workflow_call: 
+        inputs:
+          mongodb-uri:
+            required: true
+            type: string            
+          kubectl-version:
+            description: "Provide the required kubectl verion"
+            default: v1.26.0
+            required: false
+            type: string            
+          k8s-manifest-dir:
+            description: "Directory containing kubernetes manifests files"
+            default: kubernetes/
+            required: true
+            type: string   
+          environment:
+            description: "Provide the Deployment Environment"
+            default: dev
+            required: true
+            type: string      
         secrets:
           k8s-kubeconfig:            
             required: true
@@ -10,10 +29,10 @@ on:
 
 jobs:
     reuse-deploy:
-      name: reuse-deploy
+      name: Deploy to ${{ inputs.environment }}
       runs-on: ubuntu-latest
       environment: 
-        name: development
+        name: ${{ inputs.environment }}
         url: https://${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
       outputs:
         INGRESS_HOST_OUTPUT: ${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
@@ -24,7 +43,7 @@ jobs:
         - name: Install Kubectl
           uses: azure/setup-kubectl@v3
           with:
-            version: 'v1.26.0'
+            version: ${{ inputs.kubectl-version }}
 
         - name: Set Kubeconfig File
           uses: azure/k8s-set-context@v3
@@ -48,16 +67,16 @@ jobs:
           with:
             tokenPrefix: '_{_'
             tokenSuffix: '_}_'
-            files: '["kubernetes/development/*.yaml"]'
+            files: '["${{ inputs.k8s-manifest-dir }}*.yaml"]'
           env:
             NAMESPACE: ${{ vars.NAMESPACE }}
             REPLICAS:  ${{ vars.REPLICAS }}
             IMAGE: ${{ vars.DOCKER_HUB_USERANME }}/solar-system:${{ github.sha }}
-            INGRESS_IP: ${{ env.INGRESS_IP }}
+            INGRESS_IP: ${{ inputs.mongodb-uri }}
             
         - name: Check Files
           run: |
-            cat kubernetes/development/*.yaml
+            cat ${{ inputs.k8s-manifest-dir }}*.yaml
             
         - name: Create MongoDB Secret
           run: |
@@ -70,12 +89,13 @@ jobs:
             -o yaml
             #-o yaml | kubectl apply -f -
 
-        - name: Deploy to DEV ENV
+        - name: Deploy to ${{inputs.environment}} ENV
           run: |
-            echo kubectl apply -f kubernetes/development/    
+            echo kubectl apply -f ${{ inputs.k8s-manifest-dir }}
             
         - name: Set App Ingress Host URL
           id: set-ingress-host-address
           run: |                        
             echo "APP_INGRESS_HOST=solar-dev.fsainovich.xyz" >> "$GITHUB_OUTPUT"
             #echo "APP_INGRESS_HOST=$(k get -n ${{ vars.NAMESPACE }} ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}" | grep -v %)" >> "$GITHUB_OUTPUT"
+
