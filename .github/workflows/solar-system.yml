@@ -175,18 +175,15 @@ jobs:
         mongodb-uri: ${{ vars.MONGO_URI}}
         environment: development
         k8s-manifest-dir: kubernetes/development/
-        #kubectl-version: 
+        #kubectl-version:      
         
-        
-
-
     dev-integration-test:      
       name: Dev Integration test
       runs-on: ubuntu-latest
       needs: dev-deploy
       if: contains(github.ref, 'feature/')
       env:
-        URL: ${{ needs.dev-deploy.outputs.INGRESS_HOST_OUTPUT }}
+        URL: ${{ needs.dev-deploy.outputs.application-url }}
       steps:
         - name: Test URL Outuput using CURL and JQ
           run: |            
