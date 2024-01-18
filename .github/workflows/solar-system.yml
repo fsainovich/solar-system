@@ -43,14 +43,10 @@ jobs:
           with:
             node-version: ${{ matrix.nodejs_version }}
 
-        - name: Cache NPM dependencies
-          uses: actions/cache@v3
+        - name: Composite Action - Cache and install NPM Packages
+          uses: ./.github/custon-actions/npm-action/
           with:
-            path: node_modules
-            key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-            
-        - name: Install dependencies
-          run: npm install
+            path-of-folder: node_modules            
 
         - name: Unit testing
           id: nodejs-unit-test-step
@@ -90,14 +86,10 @@ jobs:
         #   with:
         #     node-version: 18
 
-        - name: Cache NPM dependencies
-          uses: actions/cache@v3
+        - name: Composite Action - Cache and install NPM Packages
+          uses: ./.github/custon-actions/npm-action/
           with:
-            path: node_modules
-            key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-
-        - name: Install dependencies
-          run: npm install
+            path-of-folder: node_modules
 
         - name: Check Code Coverage
           run: npm run coverage
@@ -121,7 +113,6 @@ jobs:
           with: 
             #name: Mocha-Test-Result-${{ matrix.operating_system }}-Node-${{ matrix.nodejs_version }}
             name: Mocha-Test-Result
-
 
         - name: Download Code Coverage Test Artifact
           uses: actions/download-artifact@v3
@@ -148,7 +139,6 @@ jobs:
              SOURCE_DIR: 'reports-${{ github.sha }}'
              DEST_DIR: 'reports-${{ github.sha }}'
           
-
     docker:
         name: Docker Tasks
         runs-on: ubuntu-latest
