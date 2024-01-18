@@ -104,9 +104,9 @@ jobs:
           continue-on-error: true
 
         - name: Archive Test Result
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@v3
           with:
-            name: Code-Coverage-Result
+            name: Code-Coverage-Result-test
             path: coverage
             retention-days: 5
 
@@ -122,11 +122,11 @@ jobs:
             #name: Mocha-Test-Result-${{ matrix.operating_system }}-Node-${{ matrix.nodejs_version }}
             name: Mocha-Test-Result
 
-            
+
         - name: Download Code Coverage Test Artifact
           uses: actions/download-artifact@v3
           with: 
-            name: Code-Coverage-Result
+            name: Code-Coverage-Result-test
 
         - name: Merge Test Files
           run: |
