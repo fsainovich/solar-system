@@ -108,6 +108,34 @@ jobs:
             path: coverage
             retention-days: 5
 
+    reports-s3:
+      needs: [code-coverage, unit-testing]
+      name: AWS S3 - Upload Reports
+      runs-on: ubuntu-latest
+      continue-on-error: true
+      steps:
+        - name: Download Mocha Test Artifact
+          uses: actions/download-artifact@v3
+          with: 
+            name: Mocha-Test-Result-${{ matrix.operating_system }}-Node-${{ matrix.nodejs_version }}
+
+        - name: Download Mocha Test Artifact
+          uses: actions/download-artifact@v3
+          with: 
+            name: Code-Coverage-Result
+
+        - name: Merge Test Files
+          run: |
+            ls -ltr
+            mkdir reports-${{ github.sha }}
+            mv cobertura-coverage.xml reports-${{ github.sha }}
+            mv Mocha-test-results*.xml reports-${{ github.sha }}
+            ls -ltr reports-${{ github.sha }}
+
+        - name: Updload to AWS S3
+          run: |
+            echo "Uploading ...."
+            
     docker:
         name: Docker Tasks
         runs-on: ubuntu-latest
@@ -205,7 +233,6 @@ jobs:
         k8s-manifest-dir: kubernetes/production/
         #kubectl-version: 
         
-
     prod-integration-test:      
       name: Prod Integration test
       runs-on: ubuntu-latest
