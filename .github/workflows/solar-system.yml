@@ -122,7 +122,7 @@ jobs:
             #name: Mocha-Test-Result-${{ matrix.operating_system }}-Node-${{ matrix.nodejs_version }}
             name: Mocha-Test-Result
 
-        - name: Download Mocha Test Artifact
+        - name: Download Code Coverage Test Artifact
           uses: actions/download-artifact@v3
           with: 
             name: Code-Coverage-Result
