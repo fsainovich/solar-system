@@ -16,7 +16,7 @@ jobs:
               github-token: ${{ secrets.GITHUB_TOKEN }}
               giphy-api-key: ${{ secrets.GIPHY_API_KEY }}
           - name: Post JavaScript PR Comment
-            uses: fsainovich/js-action-pr-giphy-comment@v1.0.1-ahpha
+            uses: fsainovich/js-action-pr-giphy-comment@v1.0.1-alpha
             with:
               github-token: ${{ secrets.GITHUB_TOKEN }}
               giphy-api-key: ${{ secrets.GIPHY_API_KEY }}
